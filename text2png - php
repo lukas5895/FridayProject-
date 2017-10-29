@@ -25,7 +25,7 @@ file_put_contents('pics/'.$file, $data);
 //Sending
 $email = $_POST['email'];
 
-mail_attachment('zdroj@zdrojovac.cz', $email, 'New image was created', 'New Image created!', ('pics/' . $file));
+mail_attachment('hello@hello.com', $email, 'New image was created', 'New Image created!', ('pics/' . $file));
 
 header("Location: index.html");
 ?>
