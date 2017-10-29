@@ -1,0 +1,168 @@
+#include <Keypad.h>
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+// Set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+void setup()
+{  
+  
+  int radek;
+  int sloupec; 
+  lcd.begin();
+  lcd.setCursor(2,1);
+  lcd.print("Plocha bude ");
+  lcd.setCursor(3,2);
+  lcd.print("vygenerovana..");
+  delay(4000);
+  for(int i = 1; i<200; i++){
+  sloupec = sloupec + 5;
+  radek = radek + 5; 
+  lcd.setCursor(radek,sloupec);
+  lcd.print("+");
+  }
+  for(int i = 1; i<200; i++){
+  sloupec = sloupec + 10;
+  radek = radek + 10; 
+  lcd.setCursor(radek,sloupec);
+  lcd.print("*");
+  lcd.setCursor(0,0);
+  lcd.print("+");
+  lcd.setCursor(0,1);
+  lcd.print("+");
+  }
+  
+	// Turn on the blacklight and print a message.
+  lcd.backlight();
+  //start pozice
+   
+   
+       
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  int novyRadek = 0;
+  int novySloupec =0;
+  int dolu = 1;
+  int help;
+  int help2;
+  int minaRadek;
+  int minaSloupec;
+  int counter;
+  int screenEnd;
+  for(int i = 1 ; i<20000;i++){
+  lcd.setCursor(novyRadek,novySloupec);
+  const byte rows = 4; 
+  const byte cols = 4; 
+  char keys[rows][cols] = {
+   {'1','2','3'},
+   {'4','5','6'},
+   {'7','8','9'},
+   {'#','0','*'}
+  };
+  byte rowPins[rows] = {A8,A9,A10,A11}; //connect to the row pinouts of the keypad
+  byte colPins[cols] = {A12,A13,A14,A15}; //connect to the column pinouts of the keypad
+  Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, rows, cols );
+   char key = keypad.getKey();
+    
+    if(counter >2){
+    
+      minaRadek = random(16);
+      minaSloupec = random (4);
+      Serial.println(minaRadek);
+      Serial.println(minaSloupec);
+    }
+   
+    counter = counter +1;
+  
+
+   if (key != NO_KEY){
+    delay(30);
+    //NAHORU
+    if(key == '5'){
+      delay(300);
+      novySloupec = novySloupec -1;
+      Serial.println( novySloupec);
+      lcd.setCursor(novyRadek,novySloupec);
+      lcd.print("o");
+    }
+  //LEVO
+   if(key == '3'){
+     delay(300);
+     novyRadek = novyRadek -1;
+     lcd.setCursor(novyRadek,novySloupec);
+     lcd.print("o");
+     Serial.println("funguju");
+   }
+    if(key == '9'){
+    delay(300);
+    novyRadek = novyRadek +1;
+    lcd.setCursor(novyRadek,novySloupec);
+    lcd.print("o");
+   }
+   //dolu
+    if(key == '6'){
+      delay(300);
+      novySloupec = novySloupec + 1;
+      lcd.setCursor(novyRadek,novySloupec);
+      lcd.print("o");
+   }
+  if(novyRadek >19){
+    help = novyRadek - 19;
+    novyRadek = novyRadek - help;
+    help = 0; 
+    Serial.println(novyRadek);
+  }   
+  if(novySloupec >4 ){
+   help2 = novySloupec - 4; 
+   novySloupec = novySloupec - help2;
+   help2 = 0;
+   Serial.println(novySloupec); 
+  }
+   if(novyRadek == minaRadek ){
+     
+      
+     for(int i = 1; i<200; i++){
+     screenEnd =  screenEnd + 1; 
+     lcd.setCursor( screenEnd, screenEnd);
+     lcd.print("-");
+     } 
+     
+    lcd.setCursor(6,1);
+    lcd.print("Bumbac");
+    lcd.setCursor(5,2);
+    lcd.print("Prohrals");
+    delay(3000);
+    lcd.setCursor(4,3);
+    lcd.print("Score : ");
+    lcd.setCursor(13,3);
+    lcd.print(counter);
+    delay(8000);
+    
+   
+   }
+    if(novySloupec == minaSloupec ){
+     for(int i = 1; i<200; i++){
+     screenEnd =  screenEnd + 1; 
+     lcd.setCursor( screenEnd, screenEnd);
+     lcd.print("-");
+     } 
+    lcd.setCursor(6,1);
+    lcd.print("Bumbac");
+    lcd.setCursor(5,2);
+    lcd.print("Prohrals");
+    delay(3000);
+    lcd.setCursor(4,3);
+    lcd.print("Score : ");
+    lcd.setCursor(13,3);
+    lcd.print(counter);
+    delay(8000);
+   }
+
+  }  
+ }  
+ 
+}
