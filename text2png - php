@@ -1,0 +1,41 @@
+require ('src/PHPMailer.php');
+use \PHPMailer\PHPMailer\PHPMailer;
+use \PHPMailer\PHPMailer\Exception;
+
+function mail_attachment($from ,$to, $subject, $message, $file){
+    $email = new PHPMailer();
+    $email->From = $from;
+    $email->FromName = $from;
+    $email->Subject = $subject;
+    $email->Body = $message;
+    $email->addAddress($to);
+    $email->addAttachment($file);
+    return $email->send();
+}
+header('Content-type: image/png');
+//Image receiving
+$data = $_POST['data'];
+//$data = substr($data,strpos($data,",")+1);
+$data = str_replace('data:image/png;base64,', '', $data);
+$data = base64_decode($data);
+//$file = strtotime(date('D_M_Y:G_i_')) . base64_encode(random_bytes(5));
+$file = time(). base64_encode(random_bytes(5)) . '.png';
+file_put_contents('pics/'.$file, $data);
+
+//Sending
+$email = $_POST['email'];
+
+mail_attachment('zdroj@zdrojovac.cz', $email, 'New image was created', 'New Image created!', ('pics/' . $file));
+
+header("Location: index.html");
+?>
+<!DOCTYPE html>
+<html lang = "en" >
+    <head>
+        <meta charset = "UTF-8" >
+        <title>Sending email...</title>
+    </head>
+    <body>
+
+    </body>
+</html>
