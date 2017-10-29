@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>text2png</title>
+    <link href="https://fonts.googleapis.com/css?family=Asap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,600" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  </head>
+  <body>
+      <header class="header-brand pt-3 pb-3 ">
+        <nav class="navbar ">
+          <a class="navbar-brand ml-auto mr-auto" href="#">
+            <img src="#" width="30" height="30" class="d-inline-block align-top img-fluid" alt="">
+            
+          </a>
+        </nav>
+      </header>
+    <div class="container">
+      <div class="col-sm-8 content-section text-center ml-auto mr-auto div-first-section">
+          <h1 class="text-uppercase">Text2png</h1>
+          <h5 class="pt-4">Write text .... ex. "text2png"</h5>
+
+
+              <div class="input-group input-group-lg pt-4 pb-3">
+                <input type="text" class="form-control input-text" placeholder="" aria-describedby="sizing-addon1">
+              </div>
+
+               
+            <hr>
+            <a href="#" class="btn btn-primary btn-lg active btn-next" role="button" aria-pressed="true">Next</a>
+      </div>
+
+      <div class="col-sm-9 content-section text-center ml-auto mr-auto div-second-section">
+          <h1 class="text-uppercase">Send it. </h1>
+          <h5 class="pt-4">email adress </h5>
+
+
+         
+              <div class="input-group input-group-lg pt-4 pb-5">
+                <input name="email" type="text" class="form-control input-email" placeholder="" aria-label="Username" aria-describedby="sizing-addon1">
+              </div>
+
+              <a href="#"class="btn btn-primary btn-lg active btn-send"role="button" aria-pressed="true">send</a>
+     
+
+
+      </div>
+    </div>
+    <canvas id="myCanvas" width="1920" height="1080"
+    style="">
+    Your browser does not support the canvas element.
+    </canvas>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript">
+  
+    $(document).ready(function(){
+        $("canvas").hide();
+        $(".div-second-section").hide();
+
+        $(".btn-next").click(function(){
+          $(".div-second-section").show();
+          $(".div-first-section").hide();
+
+
+          
+           
+        });
+    
+        $(".btn-send").click(function(){ 
+           var text = $('.input-text').val();
+           var email = $('.input-email').val();
+           var canvas = document.getElementById("myCanvas");
+            var ctx = canvas.getContext("2d");
+          
+   
+      
+         drawTextBG(ctx, text, ' 33px Asap', 1800, 70);   
+      
+     
+  
+function drawTextBG(ctx, txt, font, x, y) {
+   
+    ctx.save();
+    ctx.font = font;
+    ctx.textBaseline = 'top';
+    ctx.fillStyle = '#063B93';
+  
+    var width = ctx.measureText(txt).width;
+  
+    width = width + 15; 
+    var a = x - width*1.2;
+  
+    width = 1815 - a ;
+     
+    ctx.fillRect(a, 58, width, parseInt(font, 18));
+     
+    ctx.fillStyle = '#fff';
+    
+    ctx.textAlign="right";
+    ctx.font =' bold 33px Asap,Roboto' ;
+    ctx.fillText(txt.toUpperCase(), x, y);
+    
+    ctx.restore();  
+  }    
+                  
+                  var canvasData = canvas.toDataURL("image/png");
+                  
+                    $.ajax({
+                      url: 'send.php',
+                      type: 'POST',                                    
+                      data: {                    
+                        data: canvasData,
+                        email : email
+                      },
+                      success: function(data) {
+                          window.location.href = "thankyouPage.html";
+                      },
+                    });
+          
+        });
+      });
+    </script>
+  </body>
+</html>
